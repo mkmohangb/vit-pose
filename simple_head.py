@@ -3,7 +3,7 @@ import torch
 import torch.nn as nn
 from typing import Optional, Dict
 
-from top_down_eval import keypoints_from_heatmaps, pose_pck_accuracy, flip_back, resize
+from top_down_eval import keypoints_from_heatmaps, pose_pck_accuracy, resize
 
 def constant_init(module: nn.Module, val: float, bias: float = 0) -> None:
     if hasattr(module, 'weight') and module.weight is not None:
@@ -260,18 +260,7 @@ class TopdownHeatmapSimpleHead(nn.Module):
                 Pairs of keypoints which are mirrored.
         """
         output = self.forward(x)
-
-        if flip_pairs is not None:
-            output_heatmap = flip_back(
-                output.detach().cpu().numpy(),
-                flip_pairs,
-                target_type=self.target_type)
-            # feature is not aligned, shift flipped heatmap for higher accuracy
-            if self.test_cfg.get('shift_heatmap', False):
-                output_heatmap[:, :, :, 1:] = output_heatmap[:, :, :, :-1]
-        else:
-            output_heatmap = output.detach().cpu().numpy()
-        return output_heatmap
+        return output.detach().cpu().numpy()
 
     def _init_inputs(self, in_channels, in_index, input_transform):
         """Check and initialize input transforms.

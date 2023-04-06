@@ -471,42 +471,6 @@ def _distance_acc(distances, thr=0.5):
         return (distances[distance_valid] < thr).sum() / num_distance_valid
     return -1
 
-def flip_back(output_flipped, flip_pairs, target_type='GaussianHeatmap'):
-    """Flip the flipped heatmaps back to the original form.
-    Note:
-        - batch_size: N
-        - num_keypoints: K
-        - heatmap height: H
-        - heatmap width: W
-    Args:
-        output_flipped (np.ndarray[N, K, H, W]): The output heatmaps obtained
-            from the flipped images.
-        flip_pairs (list[tuple()): Pairs of keypoints which are mirrored
-            (for example, left ear -- right ear).
-        target_type (str): GaussianHeatmap or CombinedTarget
-    Returns:
-        np.ndarray: heatmaps that flipped back to the original image
-    """
-    assert output_flipped.ndim == 4, \
-        'output_flipped should be [batch_size, num_keypoints, height, width]'
-    shape_ori = output_flipped.shape
-    channels = 1
-    if target_type.lower() == 'CombinedTarget'.lower():
-        channels = 3
-        output_flipped[:, 1::3, ...] = -output_flipped[:, 1::3, ...]
-    output_flipped = output_flipped.reshape(shape_ori[0], -1, channels,
-                                            shape_ori[2], shape_ori[3])
-    output_flipped_back = output_flipped.copy()
-
-    # Swap left-right parts
-    for left, right in flip_pairs:
-        output_flipped_back[:, left, ...] = output_flipped[:, right, ...]
-        output_flipped_back[:, right, ...] = output_flipped[:, left, ...]
-    output_flipped_back = output_flipped_back.reshape(shape_ori)
-    # Flip horizontally
-    output_flipped_back = output_flipped_back[..., ::-1]
-    return output_flipped_back
-
 def resize(input,
            size=None,
            scale_factor=None,
