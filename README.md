@@ -6,6 +6,8 @@ Create a version of VIT Pose without the framework code which is easy to underst
 
 Download the model weights from [1] - VitPose-B - single task training - classic decoder.
 
+image => preprocess => model => postprocess => keypoints
+
 ```python main.py```
 
 Adapted from:
