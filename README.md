@@ -1,6 +1,6 @@
-### VIT Pose
+### ViT Pose
 
-Create a version of VIT Pose without the framework code which is easy to understand. 
+ViTPose is a 2D Human Pose Estimation model based on the Vision transformer architecture. The official repo is [1]. Goal here is to create a version of VIT Pose without the framework code(mmpose/mmcv) for easy understanding/hacking. Only inference is supported.
 
 ```pip install -r requirements.txt```
 
