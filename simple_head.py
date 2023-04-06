@@ -3,7 +3,7 @@ import torch
 import torch.nn as nn
 from typing import Optional, Dict
 
-from top_down_eval import keypoints_from_heatmaps, pose_pck_accuracy, resize
+from postprocess import keypoints_from_heatmaps, pose_pck_accuracy, resize
 
 def constant_init(module: nn.Module, val: float, bias: float = 0) -> None:
     if hasattr(module, 'weight') and module.weight is not None:
