@@ -1,5 +1,4 @@
 import cv2
-from importlib import import_module
 from simple_head import TopdownHeatmapSimpleHead
 import torch
 import torch.nn as nn
@@ -32,26 +31,24 @@ class ViTPoseModel(nn.Module):
                                         img_size=[img_width, img_height])
         return res 
 
-mod = import_module('ViTPose_base_coco_256x192')
-model = getattr(mod, 'model')
 weights = "vitpose-b.pth"
 
-head = TopdownHeatmapSimpleHead(in_channels=model['keypoint_head']['in_channels'], 
-                                out_channels=model['keypoint_head']['out_channels'],
-                                num_deconv_filters=model['keypoint_head']['num_deconv_filters'],
-                                num_deconv_kernels=model['keypoint_head']['num_deconv_kernels'],
-                                num_deconv_layers=model['keypoint_head']['num_deconv_layers'],
-                                extra=model['keypoint_head']['extra'])
+head = TopdownHeatmapSimpleHead(in_channels=768,
+                                out_channels=17,
+                                num_deconv_filters=(256,256),
+                                num_deconv_kernels=(4,4),
+                                num_deconv_layers=2,
+                                extra=dict(final_conv_kernel=1,))
 
-backbone = ViT(img_size=model['backbone']['img_size'],
-                patch_size=model['backbone']['patch_size']
-                ,embed_dim=model['backbone']['embed_dim'],
-                depth=model['backbone']['depth'],
-                num_heads=model['backbone']['num_heads'],
-                ratio = model['backbone']['ratio'],
-                mlp_ratio=model['backbone']['mlp_ratio'],
-                qkv_bias=model['backbone']['qkv_bias'],
-                drop_path_rate=model['backbone']['drop_path_rate']
+backbone = ViT(img_size=(256,192),
+                patch_size=16,
+                embed_dim=768,
+                depth=12,
+                num_heads=12,
+                ratio = 1,
+                mlp_ratio=4,
+                qkv_bias=True,
+                drop_path_rate=0.3
                 )
 
 pose_model = ViTPoseModel(backbone, head)
