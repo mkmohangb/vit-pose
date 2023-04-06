@@ -8,9 +8,9 @@ from vit import ViT
 import numpy as np
 import matplotlib.pyplot as plt
 
-image_file = "000000000785.jpg"
+image_file = "imgs/000000000785.jpg"
 bbox = np.array([280.79,  44.73, 218.7 , 346.68]) #output of detector
-image_file = "000000196141.jpg"
+image_file = "imgs/000000196141.jpg"
 bbox = np.array([247.76, 74.23, 169.67, 300.78]) #output of detector
 
 img_width = 192
