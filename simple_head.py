@@ -18,61 +18,6 @@ def normal_init(module: nn.Module, mean: float = 0, std: float = 1,
     if hasattr(module, 'bias') and module.bias is not None:
         nn.init.constant_(module.bias, bias)
 
-def build_conv_layer(cfg: Optional[Dict], *args, **kwargs) -> nn.Module:
-    """Build convolution layer.
-    Args:
-        cfg (None or dict): The conv layer config, which should contain:
-            - type (str): Layer type.
-            - layer args: Args needed to instantiate an conv layer.
-        args (argument list): Arguments passed to the `__init__`
-            method of the corresponding conv layer.
-        kwargs (keyword arguments): Keyword arguments passed to the `__init__`
-            method of the corresponding conv layer.
-    Returns:
-        nn.Module: Created conv layer.
-    """
-    if cfg is None:
-        cfg_ = dict(type='Conv2d')
-    else:
-        if not isinstance(cfg, dict):
-            raise TypeError('cfg must be a dict')
-        if 'type' not in cfg:
-            raise KeyError('the cfg dict must contain the key "type"')
-        cfg_ = cfg.copy()
-
-    layer_type = cfg_.pop('type')
-    if layer_type != "Conv2d":
-        raise KeyError(f'Unrecognized layer type {layer_type}')
-    else:
-        conv_layer = nn.Conv2d
-
-    layer = conv_layer(*args, **kwargs, **cfg_)
-
-    return layer
-
-def build_upsample_layer(cfg, *args, **kwargs) -> nn.Module:
-
-    if not isinstance(cfg, dict):
-        raise TypeError(f'cfg must be a dict, but got {type(cfg)}')
-    if 'type' not in cfg:
-        raise KeyError(
-            f'the cfg dict must contain the key "type", but got {cfg}')
-    cfg_ = cfg.copy()
-
-    layer_type = cfg_.pop('type')
-    if layer_type !='deconv':
-        raise KeyError(f'Unrecognized upsample type {layer_type}')
-    else:
-        upsample = nn.ConvTranspose2d
-
-    if upsample is nn.Upsample:
-        cfg_['mode'] = layer_type
-    layer = upsample(*args, **kwargs, **cfg_)
-    return layer
-
-
-
-
 class TopdownHeatmapSimpleHead(nn.Module):
     """Top-down heatmap simple head. paper ref: Bin Xiao et al. ``Simple
     Baselines for Human Pose Estimation and Tracking``.
@@ -172,8 +117,7 @@ class TopdownHeatmapSimpleHead(nn.Module):
 
                 for i in range(num_conv_layers):
                     layers.append(
-                        build_conv_layer(
-                            dict(type='Conv2d'),
+                        nn.Conv2d(
                             in_channels=conv_channels,
                             out_channels=conv_channels,
                             kernel_size=num_conv_kernels[i],
@@ -183,8 +127,7 @@ class TopdownHeatmapSimpleHead(nn.Module):
                     layers.append(nn.ReLU(inplace=True))
 
             layers.append(
-                build_conv_layer(
-                    cfg=dict(type='Conv2d'),
+                nn.Conv2d(
                     in_channels=conv_channels,
                     out_channels=out_channels,
                     kernel_size=kernel_size,
@@ -344,8 +287,7 @@ class TopdownHeatmapSimpleHead(nn.Module):
 
             planes = num_filters[i]
             layers.append(
-                build_upsample_layer(
-                    dict(type='deconv'),
+                nn.ConvTranspose2d(
                     in_channels=self.in_channels,
                     out_channels=planes,
                     kernel_size=kernel,
