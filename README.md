@@ -23,7 +23,10 @@ image => preprocess => model => postprocess => keypoints
 
 #### b. Model
   - Backbone - Patch Embedding + Encoder blocks
-  - Head - heatmaps(64 x 48) corresponding to the number of key points - Decoder
+  - Decoder or Head - heatmaps(64 x 48) corresponding to the number of key points
+  
+<img width="576" alt="Screenshot 2023-04-10 at 12 23 44 PM" src="https://user-images.githubusercontent.com/2610866/230844903-fd0d0ccb-19ba-4cc3-b63b-a7cf9c22e97e.png">
+
 
 #### c. Postprocess
    - Heatmaps to keypoints
