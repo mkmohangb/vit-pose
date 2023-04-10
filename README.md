@@ -15,6 +15,7 @@ image => preprocess => model => postprocess => keypoints
 
 #### a. Preprocess 
 -  calculate center/scale, do affine_transform
+   - (x, y, w, h) - bounding box of detected person in the image that is output by an object detector (e.g. YOLO or EfficientDet)
    - center - x + w/2, y + h/2
    - adjust (w,h) based on the image aspect ratio. scale - ((w,h)/200) * padding (200 is used to normalize the scale)
    - Affine transform  
@@ -40,6 +41,6 @@ image => preprocess => model => postprocess => keypoints
      - add +/-0.25 shift to the locations for higher accuracy
      - scale = scale * 200. Transform back to the image dimensions -> location * scale + center - 0.5 * scale
 
-#### d. Adapted from:
+### 3. Adapted from:
  1. [ViTPose](https://github.com/ViTAE-Transformer/ViTPose) 
  2. [ViTPose-Pytorch](https://github.com/gpastal24/ViTPose-Pytorch)
