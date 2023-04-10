@@ -26,7 +26,7 @@ image => preprocess => model => postprocess => keypoints
   - Backbone - Patch Embedding + Pos. Embedding + Encoder blocks
     - patch embedding implemented using a Conv2D layer with the kernel size and stride equal to the patch size(16) and the out channels equal to the embedding dimension (768). Output shape is [(1, 768, 16, 12)]. Flattened & transposed to [(1, 192, 768)]
     - Position embedding is added to the output of patch emdedding.
-    - this embedding output is fed to multiple layers of encoder blocks. Output shape is same as input shape.
+    - this embedding output is fed to multiple layers of encoder blocks. Output shape [(1, 192, 768)] is same as input shape.
     - output is reshaped back to [(1, 768, 16, 12)]
   - Decoder or Head - heatmaps(64 x 48) corresponding to the number of key points
     - Encoder output is fed to a decoder which consists of 2 layers of ConvTranspose2D + BN + ReLU ([(1, 256, 64, 48)]) and a final conv1d layer with (1x1) kernel and 17 out channels([(1, 17, 64, 48)]).
