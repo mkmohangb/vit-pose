@@ -16,8 +16,8 @@ image => preprocess => model => postprocess => keypoints
 #### a. Preprocess 
 -  calculate center/scale, do affine_transform
    - center - x + w/2, y + h/2
-		 - adjust (w,h) based on the image aspect ratio. scale - ((w,h)/200) * padding (200 is used to normalize the scale)
-		 - Affine transform  
+   - adjust (w,h) based on the image aspect ratio. scale - ((w,h)/200) * padding (200 is used to normalize the scale)
+   - Affine transform  
 -  convert to tensor & /255
 -  normalize the tensor
 
