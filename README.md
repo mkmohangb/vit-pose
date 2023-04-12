@@ -11,7 +11,12 @@ Download the model weights from [1] - VitPose-B - single task training - classic
 
 ### 2. Details
 
-image => preprocess => model => postprocess => keypoints
+#### 0. Pretraining
+Pretraining of the ViT backbone is done using Masked AutoEncoder(MAE) approach. This was validated using ImageNet / COCO / COCO + AIC. Using COCO + AIC showed similar performance(AP/AR) as ImageNet although the size of COCO + AIC is an order less than ImageNet. So less data is required in pre- training if it is similar to the ones that will be used for training downstream tasks.
+
+The sequence of steps is as follows:
+
+Image => preprocess => model => postprocess => keypoints
 
 #### a. Preprocess 
 -  calculate center/scale, do affine_transform
@@ -29,7 +34,7 @@ image => preprocess => model => postprocess => keypoints
     - Position embedding is added to the output of patch emdedding.
     - this embedding output is fed to multiple layers of encoder blocks. Output shape [(1, 192, 768)] is same as input shape.
     - output is reshaped back to [(1, 768, 16, 12)]
-  - Decoder or Head - heatmaps(64 x 48) corresponding to the number of key points
+  - Decoder or Head - outputs heatmaps of size (64 x 48) corresponding to the number of key points
     - Encoder output is fed to a decoder which consists of 2 layers of ConvTranspose2D + BN + ReLU ([(1, 256, 64, 48)]) and a final conv1d layer with (1x1) kernel and 17 out channels([(1, 17, 64, 48)]).
   
 <img width="576" alt="Screenshot 2023-04-10 at 12 23 44 PM" src="https://user-images.githubusercontent.com/2610866/230844903-fd0d0ccb-19ba-4cc3-b63b-a7cf9c22e97e.png">
